@@ -21,14 +21,15 @@ var spawn = require('child_process').spawn,
     phantomLoc = __dirname,
     seleniumServerProcess = null,
     phantomProcess = null,
-    fs = require('fs');
+    fs = require('fs'),
+    path = require('path');
 
 // installed as module or locally?
 if (fs.existsSync('jar')) {
-    selOptions.push ( 'jar/selenium-server-standalone-2.39.0.jar' );
+    selOptions.push ( 'jar/selenium-server-standalone-2.40.0.jar' );
     phantomLoc += "/../node_modules/phantomjs/bin";
 } else {
-    selOptions.push ( 'node_modules/grunt-selenium-webdriver/jar/selenium-server-standalone-2.39.0.jar' );    
+    selOptions.push ( 'node_modules/grunt-selenium-webdriver/jar/selenium-server-standalone-2.40.0.jar' );    
     phantomLoc += "/../../phantomjs/bin";
 }
 
@@ -74,6 +75,21 @@ function start( next, isHeadless ) {
     if ( isHeadless ) {    
         selOptions.push ( '-role');
         selOptions.push ( 'hub');
+    }
+
+    // Select the parent path
+    var driversPath = path.dirname(__dirname);
+    driversPath += path.sep + "drivers";
+
+    var chromeDriver = null;
+    if(/^win/.test(os.platform())) {
+      //// Windows
+      selOptions.push("-Dwebdriver.chrome.driver=" + driversPath + path.sep + 'chromedriver.exe');
+    } else if (/^darwin/.test(os.platform())) {
+      // Mac
+      selOptions.push("-Dwebdriver.chrome.driver=" + driversPath + path.sep + 'chromedriver-osx');
+    } else {
+      // Probably linux
     }
 
     seleniumServerProcess = spawn( 'java', selOptions );
