@@ -85,6 +85,9 @@ function start( next, isHeadless ) {
     if(/^win/.test(os.platform())) {
       //// Windows
       selOptions.push("-Dwebdriver.chrome.driver=" + driversPath + path.sep + 'chromedriver.exe');
+      selOptions.push("-Dwebdriver.ie.driver=" + driversPath + path.sep + 'IEDriverServer32.exe');
+      // I don't think we can have 32bit and 64bit defined at the same time.
+      //selOptions.push("-Dwebdriver.ie.driver=" + driversPath + path.sep + 'IEDriverServer64.exe');
     } else if (/^darwin/.test(os.platform())) {
       // Mac
       selOptions.push("-Dwebdriver.chrome.driver=" + driversPath + path.sep + 'chromedriver-osx');
